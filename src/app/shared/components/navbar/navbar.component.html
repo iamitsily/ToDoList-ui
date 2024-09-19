@@ -1,0 +1,20 @@
+<div class="navbar bg-base-100">
+  <div class="flex-1">
+    <a class="btn btn-ghost text-xl" routerLink="/user">ToDoList</a>
+  </div>
+  <div class="flex-none">
+    <ul class="menu menu-horizontal px-1">
+      <li><a routerLink="/notes">Notas</a></li>
+      <li>
+        <details>
+          <summary>UserName</summary>
+          <ul class="bg-base-100 rounded-t-none p-2">
+            <li><a routerLink="/user/profile">Ajustes</a></li>
+            <li><a routerLink="/user">Salir</a></li>
+          </ul>
+        </details>
+      </li>
+    </ul>
+    <button class="btn btn-xs sm:btn-sm md:btn-md btn btn-active" routerLink="/user">Ingresar</button>
+  </div>
+</div>
