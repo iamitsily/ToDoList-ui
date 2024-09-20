@@ -20,10 +20,10 @@
           </div>
           <div class="card-actions justify-end">
             <div class="badge badge-outline" [ngClass]="{
-                'badge-primary': task.status === 'completed',
-                'badge-error': task.status === 'pending'
+                'badge-primary': task.state === 1,
+                'badge-error': task.state === 0
               }">
-              {{ task.status === 'completed' ? 'Completada' : 'Pendiente' }}
+              {{ task.state === 1 ? 'Completada' : 'Pendiente' }}
             </div>
           </div>
         </div>
@@ -31,11 +31,10 @@
     </div>
   </div>
 
-
   <!-- Modal para agregar o modificar tarea -->
   <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
     <div class="bg-base-100 p-6 rounded-lg shadow-xl w-full max-w-lg">
-      <h2 class="text-2xl font-bold mb-4">{{ editingTaskIndex !== null ? 'Modificar tarea existente' : 'Agregar nuevatarea' }}</h2>
+      <h2 class="text-2xl font-bold mb-4">{{ editingTaskIndex !== null ? 'Modificar tarea existente' : 'Agregar nueva tarea' }}</h2>
       <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
         <div class="card bg-base-300 shadow-xl rounded-lg">
           <div class="card-body p-6">
@@ -64,8 +63,8 @@
 
             <h1 class="text-xl text-base-content mb-1 mt-4">Estado</h1>
             <select class="select select-bordered text-base-content w-full" formControlName="status">
-              <option value="pending">Pendiente</option>
-              <option value="completed">Completada</option>
+              <option value="0">Pendiente</option>
+              <option value="1">Completada</option>
             </select>
 
             <div class="card-actions mt-4">
@@ -78,5 +77,4 @@
       </form>
     </div>
   </div>
-
 </div>

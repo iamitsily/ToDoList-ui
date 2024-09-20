@@ -4,17 +4,17 @@
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
-      <li><a routerLink="/notes">Notas</a></li>
-      <li>
+      <li *ngIf="isAuthenticated"><a routerLink="/notes">Notas</a></li>
+      <li *ngIf="isAuthenticated">
         <details>
-          <summary>UserName</summary>
+          <summary>{{ userName }}</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a routerLink="/user/profile">Ajustes</a></li>
-            <li><a routerLink="/user">Salir</a></li>
+            <li><a (click)="logout()">Salir</a></li>
           </ul>
         </details>
       </li>
     </ul>
-    <button class="btn btn-xs sm:btn-sm md:btn-md btn btn-active" routerLink="/user">Ingresar</button>
+    <button class="btn btn-xs sm:btn-sm md:btn-md btn btn-active" *ngIf="!isAuthenticated" routerLink="/user">Ingresar</button>
   </div>
 </div>

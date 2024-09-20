@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { config, Observable } from 'rxjs';
 import { AuthResponse } from '../model/user';
-
+import { Config } from '../config';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080/'
+  private apiUrl = Config.apiUrl+'/auth';
 
 
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}auth/login`, { email, password });
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { email, password });
   }
 
   // Guarda el token en localStorage
