@@ -9,7 +9,8 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SharedModule } from '../shared/shared.module';
-
+import { FormsModule } from '@angular/forms';
+import { unauthorizedPageComponent } from './pages/unauthorized-page/unauthorized-page.component';
 @NgModule({
   declarations: [
     LoginComponent,
@@ -17,12 +18,14 @@ import { SharedModule } from '../shared/shared.module';
     ProfleComponent,
     LoginPageComponent,
     RegisterPageComponent,
-    ProfilePageComponent
+    ProfilePageComponent,
+    unauthorizedPageComponent
   ],
   imports: [
     CommonModule,
     UserRoutingModule,
-    SharedModule
+    SharedModule,
+    FormsModule
   ]
 })
 export class UserModule { }
