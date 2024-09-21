@@ -4,7 +4,6 @@ import { Config } from '../config';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Note } from '../model/note';
 import { AuthService } from './auth.service';
-import { AuthInterceptorService } from './auth.interceptor.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -33,7 +32,11 @@ export class NotesApiService {
 
   // Guardar una nueva nota
   addNote(note: Note): Observable<Note> {
-    return this.http.post<Note>(this.apiUrl, note);
+    const requestBody = {
+      ...note,
+      user : {id: this.authService.getUser().id}
+    };
+    return this.http.post<Note>(`${this.apiUrl}/register`, requestBody, { headers: this.getHeaders() });
   }
 
   // Editar una nota existente

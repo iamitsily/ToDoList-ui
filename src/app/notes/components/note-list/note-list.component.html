@@ -46,6 +46,8 @@
               class="text-red-500">
               El título es obligatorio.
             </div>
+            <input type="number" class="input input-bordered w-full text-base-content"
+              value="1" formControlName="active" readonly hidden/>
 
             <h1 class="text-xl text-base-content mb-1 mt-4">Descripción</h1>
             <textarea class="textarea textarea-bordered text-base-content h-35 w-full" rows="4" placeholder="Descripción de la tarea"
@@ -62,7 +64,7 @@
             </div>
 
             <h1 class="text-xl text-base-content mb-1 mt-4">Estado</h1>
-            <select class="select select-bordered text-base-content w-full" formControlName="status">
+            <select class="select select-bordered text-base-content w-full" formControlName="state">
               <option value="0">Pendiente</option>
               <option value="1">Completada</option>
             </select>

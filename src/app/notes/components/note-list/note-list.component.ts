@@ -27,6 +27,7 @@ export class NoteListComponent {
       title: ['', Validators.required],
       description: ['', Validators.required],
       date: ['', Validators.required],
+      active: [1, Validators.required],
       state: [0, Validators.required] // Ajusta según tu modelo
     });
   }
@@ -60,15 +61,40 @@ export class NoteListComponent {
   }
   saveTask() {
     if (this.taskForm.valid) { // Verifica si el formulario es válido
-      if (this.editingTaskIndex !== null) {
-        this.tasks[this.editingTaskIndex] = { ...this.taskForm.value, id: this.tasks[this.editingTaskIndex].id };
+      const taskData: Note = { ...this.taskForm.value };
+  
+      if (this.editingTaskIndex !== null && this.editingTaskIndex >= 0) { 
+        // Verifica que editingTaskIndex no sea null y sea un índice válido
+        const updatedTask = {
+          ...this.tasks[this.editingTaskIndex], 
+          ...taskData // Sobrescribe los datos con el formulario
+        };
+  
+        this.notesApi.updateNote(updatedTask.id, updatedTask).subscribe(
+          (updatedNote: Note) => {
+            this.tasks[this.editingTaskIndex!] = updatedNote; // Actualiza la tarea en el array local
+            this.closeModal();
+          },
+          error => {
+            console.error('Error al actualizar la tarea:', error);
+          }
+        );
       } else {
-        const newTask: Note = { ...this.taskForm.value, id: this.tasks.length + 1 }; // Ajusta la generación de ID según tu API
-        this.tasks.push(newTask);
+        // Agregando una nueva tarea
+        this.notesApi.addNote(taskData).subscribe(
+          (newNote: Note) => {
+            this.tasks.push(newNote); // Agrega la nueva tarea a la lista
+            this.closeModal();
+          },
+          error => {
+            console.error('Error al agregar la nueva tarea:', error);
+          }
+        );
       }
-      this.closeModal();
     }
   }
+  
+  
   
   resetForm() {
     this.taskForm.reset({ state: 0 }); // Resetea el formulario a su estado inicial
