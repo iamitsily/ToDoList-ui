@@ -57,7 +57,7 @@
             </div>
 
             <h1 class="text-xl text-base-content mb-1 mt-4">Fecha</h1>
-            <input type="date" class="input input-bordered text-base-content" formControlName="date" />
+            <input type="date" class="input input-bordered text-base-content" formControlName="date" [min]="'2020-01-01'"/>
             <div *ngIf="taskForm.get('date')?.invalid && (taskForm.get('date')?.touched || taskForm.get('date')?.dirty)"
               class="text-red-500">
               La fecha es obligatoria.
@@ -71,7 +71,7 @@
 
             <div class="card-actions mt-4 items-center">
               <button class="btn btn-primary w-full" [disabled]="taskForm.invalid">Guardar tarea</button>
-              <button class="btn btn-warning w-50% mt-2" [disabled]="taskForm.invalid" (click)="deleteTask()">Eliminar tarea</button>
+              <button class="btn btn-warning w-50% mt-2" [disabled]="taskForm.invalid" (click)="deleteTask()" *ngIf="editingTaskIndex !== null">Eliminar tarea</button>
             </div>
           </div>
         </div>

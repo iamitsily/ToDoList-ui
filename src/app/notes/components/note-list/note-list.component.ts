@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotesApiService } from '../../../core/services/notes-api.service';
 import { Note } from '../../../core/model/note';
@@ -13,22 +13,30 @@ interface Task {
 @Component({
   selector: 'app-note-list',
   templateUrl: './note-list.component.html',
-  styleUrl: './note-list.component.css'
+  styleUrl: './note-list.component.css',
 })
 export class NoteListComponent {
-  tasks: Note[]= [];
+  tasks: Note[] = [];
   isModalOpen = false; // Controla la visibilidad del modal
-  newTask: Note = { id: 0, title: '', description: '', date: '', state: 0, activeTodo: 1, userId: 0 }; // Inicializa la nueva tarea
+  newTask: Note = {
+    id: 0,
+    title: '',
+    description: '',
+    date: '',
+    state: 0,
+    activeTodo: 1,
+    userId: 0,
+  }; // Inicializa la nueva tarea
   editingTaskIndex: number | null = null; // Controla si estamos editando (almacena el índice de la tarea)
   taskForm: FormGroup;
 
-  constructor(private fb: FormBuilder,  private notesApi: NotesApiService) {
+  constructor(private fb: FormBuilder, private notesApi: NotesApiService) {
     this.taskForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       date: ['', Validators.required],
       activeTodo: [1, Validators.required],
-      state: [0, Validators.required] // Ajusta según tu modelo
+      state: [0, Validators.required], // Ajusta según tu modelo
     });
   }
 
@@ -41,7 +49,7 @@ export class NoteListComponent {
       (tasks: Note[]) => {
         this.tasks = tasks; // Asigna las tareas obtenidas al array de tareas
       },
-      error => {
+      (error) => {
         console.error('Error al cargar las tareas:', error);
       }
     );
@@ -49,10 +57,35 @@ export class NoteListComponent {
 
   openModal() {
     this.isModalOpen = true;
+    this.editingTaskIndex = null;
+    this.taskForm.reset({
+      title: '',
+      description: '',
+      date: '',
+      state: 0,
+      activeTodo: 1,
+    });
+    const today = new Date().toISOString().split('T')[0]; // Obtiene la fecha en formato YYYY-MM-DD
+    this.taskForm.patchValue({
+      date: today,
+    });
   }
   editTask(index: number) {
-    this.editingTaskIndex = index; // Almacena el índice de la tarea que se va a editar
-    this.taskForm.patchValue(this.tasks[index]); // Llena el formulario con los datos de la tarea
+    this.editingTaskIndex = index;
+    const task = this.tasks[index];
+
+    // Asegúrate de resetear el formulario antes de actualizarlo
+    this.taskForm.reset({
+      title: task.title,
+      description: task.description,
+      date: task.date,
+      state: task.state,
+      activeTodo: 1,
+    });
+
+    // Marca los campos del formulario como tocados para que la validación funcione correctamente
+    this.taskForm.markAllAsTouched();
+
     this.isModalOpen = true;
   }
   closeModal() {
@@ -60,22 +93,23 @@ export class NoteListComponent {
     this.resetForm();
   }
   saveTask() {
-    if (this.taskForm.valid) { // Verifica si el formulario es válido
+    if (this.taskForm.valid) {
+      // Verifica si el formulario es válido
       const taskData: Note = { ...this.taskForm.value };
-  
-      if (this.editingTaskIndex !== null && this.editingTaskIndex >= 0) { 
+
+      if (this.editingTaskIndex !== null && this.editingTaskIndex >= 0) {
         // Verifica que editingTaskIndex no sea null y sea un índice válido
         const updatedTask = {
-          ...this.tasks[this.editingTaskIndex], 
-          ...taskData // Sobrescribe los datos con el formulario
+          ...this.tasks[this.editingTaskIndex],
+          ...taskData, // Sobrescribe los datos con el formulario
         };
-  
+
         this.notesApi.updateNote(updatedTask).subscribe(
           (updatedNote: Note) => {
             this.tasks[this.editingTaskIndex!] = updatedNote; // Actualiza la tarea en el array local
             this.closeModal();
           },
-          error => {
+          (error) => {
             console.error('Error al actualizar la tarea:', error);
           }
         );
@@ -86,14 +120,14 @@ export class NoteListComponent {
             this.tasks.push(newNote); // Agrega la nueva tarea a la lista
             this.closeModal();
           },
-          error => {
+          (error) => {
             console.error('Error al agregar la nueva tarea:', error);
           }
         );
       }
     }
   }
-    
+
   deleteTask() {
     if (this.editingTaskIndex !== null && this.editingTaskIndex >= 0) {
       const taskId = this.tasks[this.editingTaskIndex].id;
@@ -103,15 +137,21 @@ export class NoteListComponent {
           this.closeModal(); // Cierra el modal después de eliminar la tarea
           this.editingTaskIndex = null; // Resetea el índice de edición
         },
-        error => {
+        (error) => {
           console.error('Error al eliminar la tarea:', error);
         }
       );
     }
   }
-  
+
   resetForm() {
-    this.taskForm.reset({ state: 0 }); // Resetea el formulario a su estado inicial
+    this.taskForm.reset({
+      title: '',
+      description: '',
+      date: '',
+      state: 0,
+      activeTodo: 1,
+    });
     this.editingTaskIndex = null; // Resetea el índice de edición
   }
 }

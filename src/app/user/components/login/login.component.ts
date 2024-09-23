@@ -9,21 +9,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  email: string | undefined;
-  password: string | undefined;
   errorMessage: string | undefined;
   loginForm: FormGroup;
   constructor(private authService: AuthService, private router: Router, private fb: FormBuilder) {
     this.loginForm = this.fb.group({
-      email: [this.email, [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
 
   onSubmit() {
-    if (this.email && this.password) {
+    const email = this.loginForm.get('email')?.value;
+    const password = this.loginForm.get('password')?.value;
+    if (email && password) {
       // Llama al servicio de login
-      this.authService.login(this.email, this.password).subscribe(
+      this.authService.login(email, password).subscribe(
         response => {
           if (response !=null) {
             this.authService.saveToken(response.token);
