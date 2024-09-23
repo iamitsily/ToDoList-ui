@@ -18,7 +18,7 @@ interface Task {
 export class NoteListComponent {
   tasks: Note[]= [];
   isModalOpen = false; // Controla la visibilidad del modal
-  newTask: Note = { id: 0, title: '', description: '', date: '', state: 0, active: 1, userId: 0 }; // Inicializa la nueva tarea
+  newTask: Note = { id: 0, title: '', description: '', date: '', state: 0, activeTodo: 1, userId: 0 }; // Inicializa la nueva tarea
   editingTaskIndex: number | null = null; // Controla si estamos editando (almacena el índice de la tarea)
   taskForm: FormGroup;
 
@@ -27,7 +27,7 @@ export class NoteListComponent {
       title: ['', Validators.required],
       description: ['', Validators.required],
       date: ['', Validators.required],
-      active: [1, Validators.required],
+      activeTodo: [1, Validators.required],
       state: [0, Validators.required] // Ajusta según tu modelo
     });
   }
@@ -70,7 +70,7 @@ export class NoteListComponent {
           ...taskData // Sobrescribe los datos con el formulario
         };
   
-        this.notesApi.updateNote(updatedTask.id, updatedTask).subscribe(
+        this.notesApi.updateNote(updatedTask).subscribe(
           (updatedNote: Note) => {
             this.tasks[this.editingTaskIndex!] = updatedNote; // Actualiza la tarea en el array local
             this.closeModal();
@@ -93,8 +93,22 @@ export class NoteListComponent {
       }
     }
   }
-  
-  
+    
+  deleteTask() {
+    if (this.editingTaskIndex !== null && this.editingTaskIndex >= 0) {
+      const taskId = this.tasks[this.editingTaskIndex].id;
+      this.notesApi.deleteNote(taskId).subscribe(
+        () => {
+          this.tasks.splice(this.editingTaskIndex!, 1); // Elimina la tarea de la lista
+          this.closeModal(); // Cierra el modal después de eliminar la tarea
+          this.editingTaskIndex = null; // Resetea el índice de edición
+        },
+        error => {
+          console.error('Error al eliminar la tarea:', error);
+        }
+      );
+    }
+  }
   
   resetForm() {
     this.taskForm.reset({ state: 0 }); // Resetea el formulario a su estado inicial

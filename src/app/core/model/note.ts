@@ -4,6 +4,6 @@ export interface Note {
     title: string;            // Título de la tarea
     description: string;      // Descripción de la tarea
     state: number;            // Estado de la tarea (podrías usar un enum si es necesario)
-    active: number;           // Estado activo o inactivo
+    activeTodo: number;           // Estado activo o inactivo
     userId: number;           // ID del usuario asociado (puedes vincular con la entidad User si es necesario)
 }

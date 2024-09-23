@@ -18,7 +18,9 @@ export class NavbarComponent implements OnInit {
 
     if (this.isAuthenticated) {
       const user = this.authService.getUser();
-      this.userName = user.name;
+      this.authService.currentUser.subscribe((user) => {
+        this.userName = user.name;
+      });
     }
   }
 

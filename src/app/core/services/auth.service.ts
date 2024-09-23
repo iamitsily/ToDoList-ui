@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { config, Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { AuthResponse } from '../model/user';
 import { Config } from '../config';
 @Injectable({
@@ -9,9 +9,18 @@ import { Config } from '../config';
 export class AuthService {
 
   private apiUrl = Config.apiUrl+'/auth';
+  private currentUserSubject: BehaviorSubject<any>;
+  public currentUser: Observable<any>;
 
+  constructor(private http: HttpClient) { 
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    this.currentUserSubject = new BehaviorSubject<any>(storedUser);
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
 
-  constructor(private http: HttpClient) { }
+  public getUser(): any {
+    return this.currentUserSubject.value;
+  }
 
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { email, password });
@@ -27,20 +36,16 @@ export class AuthService {
     return localStorage.getItem('authToken');
   }
 
-  // Guarda la información del usuario en localStorage
-  saveUser(user: any): void {
+  updateUserLocal(user: any) {
     localStorage.setItem('user', JSON.stringify(user));
-  }
-
-  // Obtiene la información del usuario de localStorage
-  getUser(): any {
-    return JSON.parse(localStorage.getItem('user') || '{}');
+    this.currentUserSubject.next(user);
   }
 
   // Elimina el token y la información del usuario de localStorage
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
+    this.currentUserSubject.next(null);
   }
 
   // Verifica si el usuario está autenticado

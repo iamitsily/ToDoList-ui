@@ -19,7 +19,7 @@ const routes: Routes = [
   },
   { 
     path: '',
-    redirectTo: 'list',
+    redirectTo: '/notes/list',
     pathMatch: 'full'
   }
 ];

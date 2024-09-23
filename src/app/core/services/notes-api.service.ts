@@ -40,12 +40,15 @@ export class NotesApiService {
   }
 
   // Editar una nota existente
-  updateNote(noteId: number, note: Note): Observable<Note> {
-    return this.http.put<Note>(`${this.apiUrl}/${noteId}`, note);
+  updateNote(note: Note): Observable<Note> {
+    const requestBody = {
+      ...note
+    }
+    return this.http.put<Note>(`${this.apiUrl}/update`, requestBody, { headers: this.getHeaders() });
   }
 
   // Eliminar una nota
   deleteNote(noteId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${noteId}`);
+    return this.http.delete<void>(`${this.apiUrl}/deleteById/${noteId}`, { headers: this.getHeaders() });
   }
 }

@@ -11,6 +11,8 @@ import { ProfilePageComponent } from './pages/profile-page/profile-page.componen
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { unauthorizedPageComponent } from './pages/unauthorized-page/unauthorized-page.component';
+import { ReactiveFormsModule } from '@angular/forms'; // Importa ReactiveFormsModule
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -25,7 +27,8 @@ import { unauthorizedPageComponent } from './pages/unauthorized-page/unauthorize
     CommonModule,
     UserRoutingModule,
     SharedModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class UserModule { }

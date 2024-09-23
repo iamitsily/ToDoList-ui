@@ -47,7 +47,7 @@
               El título es obligatorio.
             </div>
             <input type="number" class="input input-bordered w-full text-base-content"
-              value="1" formControlName="active" readonly hidden/>
+              value="1" formControlName="activeTodo" readonly hidden/>
 
             <h1 class="text-xl text-base-content mb-1 mt-4">Descripción</h1>
             <textarea class="textarea textarea-bordered text-base-content h-35 w-full" rows="4" placeholder="Descripción de la tarea"
@@ -69,13 +69,13 @@
               <option value="1">Completada</option>
             </select>
 
-            <div class="card-actions mt-4">
+            <div class="card-actions mt-4 items-center">
               <button class="btn btn-primary w-full" [disabled]="taskForm.invalid">Guardar tarea</button>
+              <button class="btn btn-warning w-50% mt-2" [disabled]="taskForm.invalid" (click)="deleteTask()">Eliminar tarea</button>
             </div>
           </div>
         </div>
-
-        <button class="btn btn-outline mt-4" (click)="closeModal()">Cancelar</button>
+        <button class="btn btn-outline mt-4 ml-5" (click)="closeModal()">Cancelar</button>
       </form>
     </div>
   </div>
