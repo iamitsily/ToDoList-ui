@@ -9,23 +9,23 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-    email: string | undefined;
-    password: string | undefined;
-    name: string | undefined;
     errorMessage: string | undefined;
     registerForm: FormGroup;
 
     constructor(private userService: UserAPIService, private router: Router, private fb: FormBuilder) {
       this.registerForm = this.fb.group({
-        email: [this.email, [Validators.required, Validators.email]],
+        email: ['',[Validators.required, Validators.email]],
         password: ['', Validators.required],
-        name: [this.name, Validators.required]
+        name: ['', Validators.required]
       });
     }
 
     register(){
-      if (this.email && this.password && this.name) {
-        this.userService.register(this.email, this.password, this.name, 1).subscribe(
+      const email = this.registerForm.get('email')?.value;
+      const password = this.registerForm.get('password')?.value;
+      const name = this.registerForm.get('name')?.value;
+      if (email && password && name) {
+        this.userService.register(email, password, name, 1).subscribe(
           response => {
             if (response !=null){
               this.router.navigate(['/user']);
