@@ -31,7 +31,6 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "public/logoPro.png",
               {
                 "glob": "_redirects",
                 "input": "src",
