@@ -25,6 +25,26 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  userDemo(){
+    const email = "userdemo@example.com";
+    const password = "userdemo";
+    if (email && password) {
+      // Llama al servicio de login
+      this.authService.login(email, password).subscribe(
+        response => {
+          if (response !=null) {
+            this.authService.saveToken(response.token);
+            this.authService.updateUserLocal(response.user);
+            this.router.navigate(['/notes']);
+          }else{
+          }
+        },
+        (error) => {
+        }
+      );
+    }
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/user/login']);

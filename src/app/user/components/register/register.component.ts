@@ -15,8 +15,8 @@ export class RegisterComponent {
     constructor(private userService: UserAPIService, private router: Router, private fb: FormBuilder) {
       this.registerForm = this.fb.group({
         email: ['',[Validators.required, Validators.email]],
-        password: ['', Validators.required],
-        name: ['', Validators.required]
+        password: ['', [Validators.required, Validators.minLength(5)]],
+        name: ['', [Validators.required, Validators.minLength(3)]]
       });
     }
 
@@ -31,6 +31,13 @@ export class RegisterComponent {
               this.router.navigate(['/user']);
             }else{
               this.errorMessage = 'Registro fallido. Por favor revise sus credenciales.';
+            }
+          },
+          error => {
+            if (error.status === 409) {
+              this.errorMessage = 'El correo electrónico ya está registrado.';
+            } else {
+              this.errorMessage = 'Error en el registro. Por favor intente de nuevo.';
             }
           }
         );
