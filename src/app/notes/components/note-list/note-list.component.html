@@ -32,51 +32,55 @@
   </div>
 
   <!-- Modal para agregar o modificar tarea -->
-  <div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="bg-base-100 p-6 rounded-lg shadow-xl w-full max-w-lg">
-      <h2 class="text-2xl font-bold mb-4">{{ editingTaskIndex !== null ? 'Modificar tarea existente' : 'Agregar nueva tarea' }}</h2>
-      <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
-        <div class="card bg-base-300 shadow-xl rounded-lg">
-          <div class="card-body p-6">
-            <h1 class="text-xl text-base-content mb-1">Título</h1>
-            <input type="text" class="input input-bordered w-full text-base-content"
-              placeholder="Escribe el título de la tarea" formControlName="title" />
-            <div
-              *ngIf="taskForm.get('title')?.invalid && (taskForm.get('title')?.touched || taskForm.get('title')?.dirty)"
-              class="text-red-500">
-              El título es obligatorio.
-            </div>
-            <input type="number" class="input input-bordered w-full text-base-content"
-              value="1" formControlName="activeTodo" readonly hidden/>
+<div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 overflow-y-auto">
+  <div class="bg-base-100 p-6 rounded-lg shadow-xl w-full sm:max-w-lg max-h-screen overflow-y-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-2xl font-bold">{{ editingTaskIndex !== null ? 'Modificar tarea existente' : 'Agregar nueva tarea' }}</h2>
+      <button class="btn btn-outline btn-warning" (click)="closeModal()">Cancelar</button>
+    </div>
+    
+    <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
+      <div class="card bg-base-300 shadow-xl rounded-lg">
+        <div class="card-body p-6">
+          <h1 class="text-xl text-base-content mb-1">Título</h1>
+          <input type="text" class="input input-bordered w-full text-base-content"
+            placeholder="Escribe el título de la tarea" formControlName="title" />
+          <div
+            *ngIf="taskForm.get('title')?.invalid && (taskForm.get('title')?.touched || taskForm.get('title')?.dirty)"
+            class="text-red-500">
+            El título es obligatorio.
+          </div>
+          <input type="number" class="input input-bordered w-full text-base-content"
+            value="1" formControlName="activeTodo" readonly hidden/>
 
-            <h1 class="text-xl text-base-content mb-1 mt-4">Descripción</h1>
-            <textarea class="textarea textarea-bordered text-base-content h-35 w-full" rows="4" placeholder="Descripción de la tarea"
-              formControlName="description"></textarea>
-            <div *ngIf="taskForm.get('description')?.invalid && (taskForm.get('description')?.touched || taskForm.get('description')?.dirty)" class="text-red-500">
-              La descripción es obligatoria.
-            </div>
+          <h1 class="text-xl text-base-content mb-1 mt-4">Descripción</h1>
+          <textarea class="textarea textarea-bordered text-base-content h-35 w-full" rows="4" placeholder="Descripción de la tarea"
+            formControlName="description"></textarea>
+          <div *ngIf="taskForm.get('description')?.invalid && (taskForm.get('description')?.touched || taskForm.get('description')?.dirty)" class="text-red-500">
+            La descripción es obligatoria.
+          </div>
 
-            <h1 class="text-xl text-base-content mb-1 mt-4">Fecha</h1>
-            <input type="date" class="input input-bordered text-base-content" formControlName="date" [min]="'2020-01-01'"/>
-            <div *ngIf="taskForm.get('date')?.invalid && (taskForm.get('date')?.touched || taskForm.get('date')?.dirty)"
-              class="text-red-500">
-              La fecha es obligatoria.
-            </div>
+          <h1 class="text-xl text-base-content mb-1 mt-4">Fecha</h1>
+          <input type="date" class="input input-bordered text-base-content" formControlName="date" [min]="'2020-01-01'"/>
+          <div *ngIf="taskForm.get('date')?.invalid && (taskForm.get('date')?.touched || taskForm.get('date')?.dirty)"
+            class="text-red-500">
+            La fecha es obligatoria.
+          </div>
 
-            <h1 class="text-xl text-base-content mb-1 mt-4">Estado</h1>
-            <select class="select select-bordered text-base-content w-full" formControlName="state">
-              <option value="0">Pendiente</option>
-              <option value="1">Completada</option>
-            </select>
+          <h1 class="text-xl text-base-content mb-1 mt-4">Estado</h1>
+          <select class="select select-bordered text-base-content w-full" formControlName="state">
+            <option value="0">Pendiente</option>
+            <option value="1">Completada</option>
+          </select>
 
-            <div class="card-actions mt-4 items-center">
-              <button class="btn btn-primary w-full" [disabled]="taskForm.invalid">Guardar tarea</button>
-              <button class="btn btn-warning w-50% mt-2" [disabled]="taskForm.invalid" (click)="deleteTask()" *ngIf="editingTaskIndex !== null">Eliminar tarea</button>
-            </div>
+          <div class="card-actions mt-4 items-center">
+            <button class="btn btn-primary w-full" [disabled]="taskForm.invalid">Guardar tarea</button>
+            <button class="btn btn-warning w-full mt-2" [disabled]="taskForm.invalid" (click)="deleteTask()" *ngIf="editingTaskIndex !== null">Eliminar tarea</button>
           </div>
         </div>
-        <button class="btn btn-outline mt-4 ml-5" (click)="closeModal()">Cancelar</button>
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
+</div>
+
 </div>

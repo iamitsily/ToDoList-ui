@@ -19,8 +19,8 @@ export class ProfleComponent implements OnInit{
     constructor(private userAPIService: UserAPIService, private authService: AuthService, private fb: FormBuilder) {
       this.updateForm = this.fb.group({
         email: [this.email, [Validators.required, Validators.email]],
-        password: ['', Validators.required],
-        name: [this.userName, Validators.required],
+        password: ['', [Validators.required, Validators.minLength(5)]],
+        name: [this.userName, [Validators.required, Validators.minLength(3)]],
         active: [1, Validators.required]
       });
 

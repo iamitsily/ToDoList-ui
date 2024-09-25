@@ -26,7 +26,12 @@
           </label>
           <input type="text" formControlName="name" placeholder="Ingresa tu nombre de usuario" class="input input-bordered" required name="name" />
           <div *ngIf="updateForm?.get('name')?.invalid && updateForm?.get('name')?.touched" class="text-red-500 text-sm">
-            El nombre es requerido.
+            <div *ngIf="updateForm.get('name')?.errors?.['minlength']">
+              El nombre debe tener al menos 3 caracteres.
+            </div>
+            <div *ngIf="updateForm.get('name')?.errors?.['required']">
+              El nombre es requerido.
+            </div>
           </div>
         </div>
 
@@ -37,7 +42,12 @@
           </label>
           <input type="password" formControlName="password" placeholder="Ingresa tu nueva contraseña" class="input input-bordered" required name="password" />
           <div *ngIf="updateForm?.get('password')?.invalid && updateForm?.get('password')?.touched" class="text-red-500 text-sm">
-            La contraseña es requerida.
+            <div *ngIf="updateForm.get('password')?.errors?.['minlength']">
+              La contraseña debe tener al menos 5 caracteres.
+            </div>
+            <div *ngIf="updateForm.get('password')?.errors?.['required']">
+              La contraseña es requerida.
+            </div>
           </div>
         </div>
 

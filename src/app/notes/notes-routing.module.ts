@@ -9,7 +9,7 @@ const routes: Routes = [
     path: 'list', 
     component: NoteListPageComponent,
     canActivate: [AuthGuard, RolGuard],
-    data: {expectedRoles: ['User','Admin']}
+    data: {expectedRoles: ['User','Admin', 'Demo']}
   },
   {
     path: 'details/:id',
