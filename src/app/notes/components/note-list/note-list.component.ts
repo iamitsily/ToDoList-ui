@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotesApiService } from '../../../core/services/notes-api.service';
 import { Note } from '../../../core/model/note';
 import { AuthService } from '../../../core/services/auth.service';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+
 interface Task {
   id: number;
   date: string;
@@ -17,6 +19,9 @@ interface Task {
   styleUrl: './note-list.component.css',
 })
 export class NoteListComponent {
+  @ViewChild(AlertComponent) alertComponent!: AlertComponent;
+  isSubmitting = false;
+
   tasks: Note[] = [];
   isModalOpen = false; // Controla la visibilidad del modal
   newTask: Note = {
@@ -68,6 +73,7 @@ export class NoteListComponent {
   }
 
   openModal() {
+    this.isSubmitting = false;
     this.isModalOpen = true;
     this.editingTaskIndex = null;
     this.taskForm.reset({
@@ -106,82 +112,98 @@ export class NoteListComponent {
   }
 
   saveTask() {
+    // Mensaje de carga inicial
+    this.isSubmitting = true;
+  
     if (this.taskForm.valid) {
       const taskData: Note = { ...this.taskForm.value };
   
-      const userRoles = this.authService.getUserRoles(); // Obtiene los roles del usuario
+      const userRoles = this.authService.getUserRoles(); 
   
       if (this.editingTaskIndex !== null && this.editingTaskIndex >= 0) {
         const updatedTask = {
           ...this.tasks[this.editingTaskIndex],
           ...taskData,
         };
-
-        // Verifica si el rol 'Demo' está presente
+  
         if (userRoles.includes('Demo')) {
-          // Solo actualiza localmente si el rol es Demo
           this.tasks[this.editingTaskIndex!] = updatedTask;
+          this.alertComponent.showAlert('Tarea actualizada localmente.', 'alert-success', 5000);
+          this.isSubmitting = false;
           this.closeModal();
         } else {
-          // Enviar la actualización al servidor
           this.notesApi.updateNote(updatedTask).subscribe(
             (updatedNote: Note) => {
-              this.tasks[this.editingTaskIndex!] = updatedNote; // Actualiza la tarea en el array local
+              this.tasks[this.editingTaskIndex!] = updatedNote;
+              this.alertComponent.showAlert('Tarea actualizada exitosamente.', 'alert-success', 5000);
+              this.isSubmitting = false;
               this.closeModal();
             },
             (error) => {
-              console.error('Error al actualizar la tarea:', error);
+              this.alertComponent.showAlert('Error al actualizar la tarea', 'alert-warning', 5000);
+              this.isSubmitting = false;
             }
           );
         }
       } else {
-        // Verifica si el rol 'Demo' está presente
         if (userRoles.includes('Demo')) {
-          // Solo agrega localmente si el rol es Demo
-          taskData.id = this.tasks.length + 1; // Asigna un nuevo ID localmente
+          taskData.id = this.tasks.length + 1; 
           this.tasks.push(taskData);
+          this.alertComponent.showAlert('Tarea agregada localmente.', 'alert-success', 5000);
+          this.isSubmitting = false;
           this.closeModal();
         } else {
-          // Enviar la nueva tarea al servidor
           this.notesApi.addNote(taskData).subscribe(
             (newNote: Note) => {
               this.tasks.push(newNote);
+              this.alertComponent.showAlert('Tarea agregada exitosamente.', 'alert-success', 5000);
+              this.isSubmitting = false;
               this.closeModal();
             },
             (error) => {
-              console.error('Error al agregar la nueva tarea:', error);
+              this.alertComponent.showAlert('Error al agregar la nueva tarea', 'alert-warning', 5000);
+              this.isSubmitting = false;
             }
           );
         }
       }
+    } else {
+      
     }
   }
-
+  
   deleteTask() {
+    this.alertComponent.showAlert('Eliminando tarea...', 'alert-info', 0);
+    this.isSubmitting = true; // Se activa al iniciar la eliminación
+  
     if (this.editingTaskIndex !== null && this.editingTaskIndex >= 0) {
-      const userRoles = this.authService.getUserRoles(); // Obtiene los roles del usuario
-
-      // Verifica si el rol 'Demo' está presente
+      const userRoles = this.authService.getUserRoles();
+  
       if (userRoles.includes('Demo')) {
-        // Solo elimina localmente si el rol es Demo
         this.tasks.splice(this.editingTaskIndex!, 1); // Elimina la tarea de la lista
-        this.closeModal(); // Cierra el modal
+        this.alertComponent.showAlert('Tarea eliminada localmente.', 'alert-success', 5000);
+        this.isSubmitting = false; // Restablecer aquí
+        this.closeModal(); // Cerrar el modal
       } else {
-        // Enviar la solicitud de eliminación al servidor
         const taskId = this.tasks[this.editingTaskIndex].id;
         this.notesApi.deleteNote(taskId).subscribe(
           () => {
             this.tasks.splice(this.editingTaskIndex!, 1); // Elimina la tarea de la lista
-            this.closeModal(); // Cierra el modal después de eliminar la tarea
+            this.alertComponent.showAlert('Tarea eliminada exitosamente.', 'alert-success', 5000);
+            this.isSubmitting = false; // Asegúrate de restablecer aquí
+            this.closeModal(); // Cerrar el modal
             this.editingTaskIndex = null; // Resetea el índice de edición
           },
           (error) => {
-            console.error('Error al eliminar la tarea:', error);
+            this.alertComponent.showAlert('No se pudo eliminar la tarea', 'alert-warning', 5000);
+            this.isSubmitting = false; // Asegúrate de restablecer aquí también
           }
         );
       }
     }
   }
+  
+  
 
   resetForm() {
     this.taskForm.reset({

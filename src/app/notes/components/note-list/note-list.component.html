@@ -16,7 +16,7 @@
           <h2 class="card-title font-bold">
             {{ task.title }}
           </h2>
-          <p>{{ task.description }}</p>
+          <p  class="truncate">{{ task.description }}</p>
           <div class="flex items-center text-sm text-base-content">
             <span class="material-icons h-8 w-5 mr-3 mt-2">calendar_today</span>
             {{ task.date }}
@@ -41,7 +41,7 @@
       <div class="card-body p-6">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-bold">{{ editingTaskIndex !== null ? 'Modificar tarea existente' : 'Agregar nueva tarea' }}</h2>
-          <button class="btn btn-outline btn-warning" (click)="closeModal()">Cancelar</button>
+          <button class="btn btn-outline btn-warning" (click)="closeModal()" [disabled]="isSubmitting">Cancelar</button>
         </div>
 
         <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
@@ -77,14 +77,13 @@
           </select>
 
           <div class="card-actions mt-4 items-center">
-            <button class="btn btn-primary w-full" [disabled]="taskForm.invalid">Guardar tarea</button>
-            <button class="btn btn-warning w-full mt-2" [disabled]="taskForm.invalid" (click)="deleteTask()" *ngIf="editingTaskIndex !== null">Eliminar tarea</button>
+            <button class="btn btn-primary w-full" [disabled]="taskForm.invalid || isSubmitting">Guardar tarea</button>
+            <button class="btn btn-warning w-full mt-2" [disabled]="taskForm.invalid || isSubmitting" (click)="deleteTask()" *ngIf="editingTaskIndex !== null">Eliminar tarea</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-
 </div>
+<app-alert></app-alert>

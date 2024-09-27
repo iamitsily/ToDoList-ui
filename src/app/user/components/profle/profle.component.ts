@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserAPIService } from '../../../core/services/user-api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-profle',
@@ -9,6 +10,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './profle.component.css'
 })
 export class ProfleComponent implements OnInit{
+    @ViewChild(AlertComponent) alertComponent!: AlertComponent;
+
+    isSubmitting = false;
     userEmail: string | undefined;
     userName: string | undefined;
     email: string | undefined;
@@ -41,6 +45,11 @@ export class ProfleComponent implements OnInit{
     }
     update() {
       if (this.updateForm.valid) {
+        this.alertComponent.showAlert('Espere por favor', 'alert-info');
+        if (this.updateForm.invalid) {
+          return;
+        }
+        this.isSubmitting = true;
         // Obtener los valores del formulario
         const formValues = this.updateForm.value;
     
@@ -51,17 +60,22 @@ export class ProfleComponent implements OnInit{
         this.userAPIService.update(userId, formValues.email, formValues.password, formValues.name, formValues.active)
           .subscribe({
             next: (response) => {
-              console.log('Usuario actualizado con éxito', response);
+              this.alertComponent.close();
               this.authService.updateUserLocal(response);
+              this.alertComponent.showAlert('Actualizado con exito', 'alert-success', 5000);
+              this.isSubmitting = false;
               // Aquí puedes agregar lógica para mostrar un mensaje de éxito, redirigir, etc.
             },
             error: (error) => {
-              console.error('Error al actualizar el usuario', error);
+              this.alertComponent.close();
+              this.isSubmitting = false;
               // Aquí puedes manejar el error, como mostrar un mensaje al usuario.
             }
           });
       } else {
-        console.log('Formulario no válido');
+        this.alertComponent.close();
+        this.isSubmitting = false;
+
       }
     }
     

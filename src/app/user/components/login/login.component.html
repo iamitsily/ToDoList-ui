@@ -31,9 +31,10 @@
           <div *ngIf="errorMessage" class="label text-xs text-warning">{{ errorMessage }}</div>
         </div>
         <div class="form-control mt-6">
-          <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login</button>
+          <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || isSubmitting">Login</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+<app-alert></app-alert>

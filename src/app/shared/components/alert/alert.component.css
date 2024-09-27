@@ -1,0 +1,51 @@
+.alert {
+    max-width: 300px;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  /* Animación para mostrar la alerta */
+  .alert.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Ocultar cuando no esté visible */
+  .alert.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  
+  /* Responsividad para pantallas medianas (tablets, etc.) */
+  @media (max-width: 768px) {
+    .alert {
+      max-width: 90%; /* Ocupa el 90% del ancho de la pantalla */
+      right: 5%; /* Espaciado lateral */
+      top: 10px; /* Margen superior ajustado */
+    }
+  }
+  
+  /* Responsividad para pantallas pequeñas (móviles) */
+  @media (max-width: 480px) {
+    .alert {
+      max-width: 95%; /* Aumentar para ocupar casi todo el ancho */
+      right: 2.5%; /* Espaciado lateral */
+      top: 10px; /* Mantiene un poco de margen superior */
+    }
+  
+    .alert svg {
+      width: 20px; /* Ajustar el tamaño del icono en pantallas pequeñas */
+      height: 20px;
+    }
+  
+    .alert span {
+      font-size: 14px; /* Reducir el tamaño de la fuente para pantallas pequeñas */
+    }
+  
+    .alert button {
+      font-size: 12px; /* Botón más pequeño */
+      padding: 2px 6px;
+    }
+  }
+  

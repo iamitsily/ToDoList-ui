@@ -13,7 +13,7 @@
           <label class="label">
             <span class="label-text">Email</span>
           </label>
-          <input type="email" formControlName="email" placeholder="Ingresa tu email" class="input input-bordered" required name="email"/>
+          <input type="email" formControlName="email" placeholder="Ingresa tu email" class="input input-bordered" required/>
           <div *ngIf="updateForm?.get('email')?.invalid && updateForm?.get('email')?.touched" class="text-red-500 text-sm">
             El email es inválido.
           </div>
@@ -24,7 +24,7 @@
           <label class="label">
             <span class="label-text">Nombre</span>
           </label>
-          <input type="text" formControlName="name" placeholder="Ingresa tu nombre de usuario" class="input input-bordered" required name="name" />
+          <input type="text" formControlName="name" placeholder="Ingresa tu nombre de usuario" class="input input-bordered" required/>
           <div *ngIf="updateForm?.get('name')?.invalid && updateForm?.get('name')?.touched" class="text-red-500 text-sm">
             <div *ngIf="updateForm.get('name')?.errors?.['minlength']">
               El nombre debe tener al menos 3 caracteres.
@@ -40,7 +40,7 @@
           <label class="label">
             <span class="label-text">Actualizar contraseña</span>
           </label>
-          <input type="password" formControlName="password" placeholder="Ingresa tu nueva contraseña" class="input input-bordered" required name="password" />
+          <input type="password" formControlName="password" placeholder="Ingresa tu nueva contraseña" class="input input-bordered" required/>
           <div *ngIf="updateForm?.get('password')?.invalid && updateForm?.get('password')?.touched" class="text-red-500 text-sm">
             <div *ngIf="updateForm.get('password')?.errors?.['minlength']">
               La contraseña debe tener al menos 5 caracteres.
@@ -53,9 +53,10 @@
 
         <!-- Submit Button -->
         <div class="form-control mt-6">
-          <button class="btn btn-primary" [disabled]="updateForm.invalid">Actualizar</button>
+          <button class="btn btn-primary" [disabled]="updateForm.invalid || isSubmitting">Actualizar</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+<app-alert></app-alert>

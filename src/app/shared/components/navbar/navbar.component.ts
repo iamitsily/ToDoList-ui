@@ -11,6 +11,7 @@ export class NavbarComponent implements OnInit {
   userName: string | undefined;
   isAuthenticated: boolean = false;
   isMenuOpen = false;
+  isSubmitting = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -26,6 +27,7 @@ export class NavbarComponent implements OnInit {
   }
 
   userDemo(){
+    this.isSubmitting = true;
     const email = "userdemo@example.com";
     const password = "userdemo";
     if (email && password) {
@@ -35,11 +37,13 @@ export class NavbarComponent implements OnInit {
           if (response !=null) {
             this.authService.saveToken(response.token);
             this.authService.updateUserLocal(response.user);
+            this.isSubmitting = false;
             this.router.navigate(['/notes']);
           }else{
           }
         },
         (error) => {
+          this.isSubmitting = false;
         }
       );
     }
