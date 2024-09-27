@@ -16,14 +16,15 @@ export class NavbarComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.isAuthenticated = this.authService.isAuthenticated();
-
-    if (this.isAuthenticated) {
-      const user = this.authService.getUser();
-      this.authService.currentUser.subscribe((user) => {
-        this.userName = user.name;
-      });
-    }
+    // Suscribirse a cambios en el estado del usuario
+    this.authService.currentUser.subscribe((user) => {
+      this.isAuthenticated = !!user; // Si hay un usuario, está autenticado
+      if (this.isAuthenticated) {
+        this.userName = user.name; // Actualizar el nombre del usuario
+      } else {
+        this.userName = ''; // Resetear el nombre si no hay usuario
+      }
+    });
   }
 
   userDemo(){

@@ -4,7 +4,11 @@
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
-      <li *ngIf="isAuthenticated"><a routerLink="/notes">Notas</a></li>
+      <!-- Mostrar solo si el usuario está autenticado -->
+      <li *ngIf="isAuthenticated">
+        <a routerLink="/notes">Notas</a>
+      </li>
+      <!-- Mostrar el menú desplegable con el nombre del usuario -->
       <li *ngIf="isAuthenticated">
         <details>
           <summary>{{ userName }}</summary>
@@ -15,6 +19,13 @@
         </details>
       </li>
     </ul>
-    <button class="btn btn-xs sm:btn-sm md:btn-md btn btn-active" *ngIf="!isAuthenticated" routerLink="/user" (click)="userDemo()" [disabled]="isSubmitting">UserDemo</button>
+    <!-- Mostrar botón de UserDemo si no está autenticado -->
+    <button class="btn btn-xs sm:btn-sm md:btn-md btn btn-active" 
+            *ngIf="!isAuthenticated" 
+            routerLink="/user" 
+            (click)="userDemo()" 
+            [disabled]="isSubmitting">
+      UserDemo
+    </button>
   </div>
 </div>
